@@ -1,31 +1,33 @@
 require("express-async-errors")
-
+const migrationsRun = require("./database/sqlite/migrations")
 const AppError = require("./utils/AppError")
 
-const express = require("express"); //IMPORTA EXPRESS
+const express = require("express") //IMPORTA EXPRESS
 
-const routes = require("./routes");
+const routes = require("./routes")
 
-const app = express(); //INSTANCIA EXPRESS
-app.use(express.json()); //ESPECIFICA O FORMATO DOS REQUEST EM JSON
+migrationsRun()
 
-app.use(routes);
+const app = express() //INSTANCIA EXPRESS
+app.use(express.json()) //ESPECIFICA O FORMATO DOS REQUEST EM JSON
 
-app.use(( error, request, response, next) => {
-    if(error instanceof AppError) {
-        return response.status(error.statusCode).json({
-            status: "error",
-            message: error.message
-        });
-    }
+app.use(routes)
 
-    console.log(error);
+app.use((error, request, response, next) => {
+  if (error instanceof AppError) {
+    return response.status(error.statusCode).json({
+      status: "error",
+      message: error.message,
+    })
+  }
 
-    return response.status(500).json({
-        status: "error",
-        message: "Internal server error"
-    });
-});
+  console.log(error)
 
-const PORT = 3333;
-app.listen(PORT, () => console.log(`Server Rodando na porta: ${PORT}`));
+  return response.status(500).json({
+    status: "error",
+    message: "Internal server error",
+  })
+})
+
+const PORT = 3333
+app.listen(PORT, () => console.log(`Server Rodando na porta: ${PORT}`))

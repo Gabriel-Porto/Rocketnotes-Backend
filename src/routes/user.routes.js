@@ -6,7 +6,7 @@ const usersRoutes = Router();
 
 const userControllers = new UserControllers();
 
-// function myMiddleware(request, response, next) {
+// function myMiddleware(request, response, next) { 
 //     console.log("Você passou pelo middleware");
     
 //     if(!request.body.isAdmin) {
@@ -17,5 +17,6 @@ const userControllers = new UserControllers();
 // }
 
 usersRoutes.post("/", userControllers.create);
+usersRoutes.put("/:id", userControllers.update)
 
 module.exports = usersRoutes;
